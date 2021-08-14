@@ -22,7 +22,7 @@
 
 double fnGen(double t)
 {
-    if(t < 0.0001) return 0;
+    if (t < 0.0001) return 0;
     return (fmod(2000 * t, 1) > (0.5 + 0.4 * sin(2 * acos(-1) * 100 * t))) ? 0.25 : -0.25;
 }
 

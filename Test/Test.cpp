@@ -4,15 +4,19 @@ int main()
 {
     auto net = setupCircuit();
 
-    net->printHeaders();
+    #ifdef VERBOSE
+        net->printHeaders();
+    #endif
 
     for(int i = 0; i < 16; ++i)
     {
         net->simulateTick();
     }
-    net->printHeaders();
 
-    net->dumpMatrix();
+    #ifdef VERBOSE
+        net->printHeaders();
+        net->dumpMatrix();
+    #endif
 
     delete net;
 
