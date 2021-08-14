@@ -25,4 +25,4 @@ public:
     }
 };
 
-static int _ = SpiceLV2::register_class("http://holocaust.tatar/");
+static int _ = SpiceLV2::register_class("https://github.com/forked-from-1kasper/halite2");
