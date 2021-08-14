@@ -107,20 +107,16 @@ void NetList::simulateTick()
 
     #ifdef VERBOSE
         printf(" %02.4f |", system.time);
-    #endif
 
-    int fillPost = 0;
-    for (int i = 1; i < nets; ++i)
-    {
-        #ifdef VERBOSE
+        int fillPost = 0;
+        for (int i = 1; i < nets; ++i)
+        {
             printf("\t%+.4e", system.b[i].lu * system.nodes[i].scale);
-        #endif
 
-        for (int j = 1; j < nets; ++j)
-            if (system.A[i][j].lu != 0) ++fillPost;
-    }
+            for (int j = 1; j < nets; ++j)
+                if (system.A[i][j].lu != 0) ++fillPost;
+        }
 
-    #ifdef VERBOSE
         printf("\t %d iters, LU density: %.1f%%\n",
             iter, 100 * fillPost / ((nets-1.f)*(nets-1.f)));
     #endif
