@@ -11,7 +11,7 @@ HPP = $(HALITE_HPP)
 CPP = $(HALITE_CPP)
 
 CXX = c++
-CFLAGS  = -I$(shell pwd) -I/usr/include/eigen3 -std=c++2a
+CFLAGS  = -fPIC -I$(shell pwd) -I/usr/include/eigen3 -std=c++2a
 #CFLAGS += -DVERBOSE
 
 PLUGIN = SpiceLV2
@@ -23,10 +23,6 @@ $(LIBHALITE).so: $(LIBHALITE).a
 $(LIBHALITE).a: $(addsuffix .o, $(HALITE_CPP))
 	ar rcs $@ $^
 
-Halite/MNACell.hpp:
-Halite/MNASystem.hpp:
-Halite/NetList.hpp:
-
 $(addsuffix .o, $(CPP)): %.o: %.cpp %.hpp $(HPP)
 	$(CXX) -c $(CFLAGS) $< -o $@
 
@@ -34,7 +30,7 @@ test: $(LIBHALITE).a
 	$(CXX) $(CFLAGS) Test/Test.cpp $(LIBHALITE).a -o Test/Test
 
 SpiceLV2/SpiceLV2.so: $(LIBHALITE).a SpiceLV2/SpiceLV2.cpp
-	g++ $(CFLAGS) -shared -fPIC -DPIC $(LIBHALITE).a SpiceLV2/SpiceLV2.cpp `pkg-config --cflags --libs lv2-plugin` -o SpiceLV2/SpiceLV2.so
+	g++ $(CFLAGS) -shared -DPIC SpiceLV2/SpiceLV2.cpp $(LIBHALITE).a `pkg-config --cflags --libs lv2-plugin` -o SpiceLV2/SpiceLV2.so
 
 bundle: SpiceLV2/manifest.ttl SpiceLV2/SpiceLV2.so
 	rm -rf $(BUNDLE)
