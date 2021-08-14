@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cmath>
 
 // MNACell represents a single entry in the solution matrix,
 // where we store constants and time-step dependent constants
