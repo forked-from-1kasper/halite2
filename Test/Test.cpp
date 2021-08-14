@@ -1,8 +1,15 @@
 #include <Halite/Halite.hpp>
+#include <Halite/ExportVoltage.hpp>
 
-int main()
-{
-    auto net = setupCircuit();
+ExportVoltage voltage(5);
+
+void onTick(MNASystem & m) {
+    printf("TIME = %f, VOLTAGE = %f\n", m.time, voltage.value());
+}
+
+int main() {
+    auto net = getTestCircuit(&onTick);
+    net->addExport(&voltage);
 
     #ifdef VERBOSE
         net->printHeaders();

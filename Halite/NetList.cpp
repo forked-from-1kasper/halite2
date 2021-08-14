@@ -1,7 +1,7 @@
 #include "Constants.hpp"
 #include "Halite.hpp"
 
-NetList::NetList(int nodes) : nets(nodes), states(0)
+NetList::NetList(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
 {
 }
 
@@ -101,9 +101,9 @@ void NetList::simulateTick()
         if (newton()) break;
     }
 
-    system.time += tStep;
-
-    update();
+    system.time += tStep; update();
+    for (const auto& ex: exports) ex->extract(system);
+    onTick(system);
 
     #ifdef VERBOSE
         printf(" %02.4f |", system.time);
@@ -279,4 +279,8 @@ int NetList::luSolve()
         system.b[r].lu *= system.A[r][r].lu;
     }
     return 1;
+}
+
+void NetList::addExport(IExport* er) {
+    exports.push_back(er);
 }

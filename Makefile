@@ -1,6 +1,6 @@
 HALITE_HPP = Halite/Component.hpp
 
-HALITE_CPP  = Halite/Constants
+HALITE_CPP  = Halite/Constants Halite/ExportVoltage
 HALITE_CPP += Halite/Voltage Halite/Capacitor Halite/Resistor Halite/Probe Halite/Function
 HALITE_CPP += Halite/JunctionPN Halite/Diode Halite/BJT
 HALITE_CPP += Halite/MNACell Halite/MNASystem Halite/NetList Halite/Halite
@@ -11,7 +11,8 @@ HPP = $(HALITE_HPP)
 CPP = $(HALITE_CPP)
 
 CXX = c++
-CFLAGS = -DVERBOSE -I$(shell pwd) -I/usr/include/eigen3 -std=c++2a
+CFLAGS  = -I$(shell pwd) -I/usr/include/eigen3 -std=c++2a
+#CFLAGS += -DVERBOSE
 
 PLUGIN = SpiceLV2
 BUNDLE = $(PLUGIN).lv2
@@ -22,7 +23,11 @@ $(LIBHALITE).so: $(LIBHALITE).a
 $(LIBHALITE).a: $(addsuffix .o, $(HALITE_CPP))
 	ar rcs $@ $^
 
-$(addsuffix .o, $(CPP)): %.o: %.cpp $(HPP)
+Halite/MNACell.hpp:
+Halite/MNASystem.hpp:
+Halite/NetList.hpp:
+
+$(addsuffix .o, $(CPP)): %.o: %.cpp %.hpp $(HPP)
 	$(CXX) -c $(CFLAGS) $< -o $@
 
 test: $(LIBHALITE).a

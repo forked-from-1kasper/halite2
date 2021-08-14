@@ -67,6 +67,15 @@ struct MNASystem
     void stampStatic(double g, int r, int c, const std::string & txt);
 };
 
+struct IExport {
+    virtual void extract(MNASystem & m) {};
+};
+
+template <class T>
+struct Export : public IExport {
+    virtual T value() { return value(); }
+};
+
 struct IComponent
 {
     virtual ~IComponent() {}
@@ -106,20 +115,25 @@ struct IComponent
 };
 
 typedef std::vector<IComponent*> ComponentList;
+typedef std::vector<IExport*> IExportList;
+typedef void (*OnTickPtr)(MNASystem & m);
 
-struct NetList
-{
-    NetList(int nodes);
+class NetList {
+public:
+    NetList(OnTickPtr onTick, int nodes);
     ~NetList();
 
-    void addComponent(IComponent * c);
+    void addComponent(IComponent *);
     void buildSystem();
     void dumpMatrix();
-    void setTimeStep(double tStepSize);
+    void setTimeStep(double);
     void simulateTick();
     void printHeaders();
 
     const MNASystem & getMNA();
+
+    IExportList exports;
+    void addExport(IExport*);
 
 protected:
     double tStep;
@@ -134,6 +148,8 @@ protected:
     void luFactor();
     int luForward();
     int luSolve();
+
+    OnTickPtr onTick;
 };
 
-NetList* setupCircuit();
+NetList* getTestCircuit(OnTickPtr);

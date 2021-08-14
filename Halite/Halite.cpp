@@ -26,7 +26,7 @@ double fnGen(double t)
     return (fmod(2000 * t, 1) > (0.5 + 0.4 * sin(2 * acos(-1) * 100 * t))) ? 0.25 : -0.25;
 }
 
-NetList* setupCircuit()
+NetList* getTestCircuit(OnTickPtr onTick)
 {
     /*
 
@@ -35,7 +35,7 @@ NetList* setupCircuit()
         this is kinda good at catching problems :)
 
     */
-    auto net = new NetList(8);
+    auto net = new NetList(onTick, 8);
 
     // node 1 is +12V
     net->addComponent(new Voltage(+12, 1, 0));
