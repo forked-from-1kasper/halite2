@@ -1,0 +1,4 @@
+*.o
+*.a
+*.so
+SpiceLV2.lv2
