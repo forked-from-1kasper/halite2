@@ -1,4 +1,4 @@
-#include "Eigen.hpp"
+#include "TransientSimulation.hpp"
 
 void MNACell::clear() {
     g = 0;

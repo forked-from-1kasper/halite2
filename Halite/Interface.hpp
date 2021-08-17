@@ -85,3 +85,6 @@ public:
     virtual const IMNASystem & getMNA() { return getMNA(); };
     virtual void addExport(IExport*) {};
 };
+
+typedef void (*OnTickPtr)(IMNASystem & m);
+typedef std::vector<IExport*> IExportList;

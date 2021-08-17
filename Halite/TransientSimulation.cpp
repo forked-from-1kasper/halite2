@@ -1,5 +1,5 @@
 #include "Constants.hpp"
-#include "Eigen.hpp"
+#include "TransientSimulation.hpp"
 
 #include <Eigen/SparseLU>
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "Eigen.hpp"
+#include "TransientSimulation.hpp"
 
 void MNASystemEigen::setSize(int n) {
     A = new SparseMatrixXd(n - 1, n - 1);

@@ -1,4 +1,4 @@
-HALITE_HPP = Halite/Component.hpp Halite/Interface.hpp Halite/Eigen.hpp
+HALITE_HPP = Halite/Component.hpp Halite/Interface.hpp
 
 HALITE_CPP  = Halite/Constants Halite/ExportVoltage
 HALITE_CPP += Halite/Voltage Halite/Capacitor Halite/Resistor Halite/Probe Halite/Function

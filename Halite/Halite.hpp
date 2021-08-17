@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Eigen.hpp"
+#include "TransientSimulation.hpp"
 
 TransientSimulation* getTestCircuit(OnTickPtr);
