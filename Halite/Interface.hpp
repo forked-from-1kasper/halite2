@@ -88,3 +88,4 @@ public:
 
 typedef void (*OnTickPtr)(IMNASystem & m);
 typedef std::vector<IExport*> IExportList;
+typedef std::vector<IComponent*> ComponentList;

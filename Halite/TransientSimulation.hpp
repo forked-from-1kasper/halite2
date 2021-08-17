@@ -46,8 +46,6 @@ struct MNASystemEigen : public IMNASystem {
     SparseMatrixXd* A; Eigen::VectorXd *b, *x;
 };
 
-typedef std::vector<IComponent*> ComponentList;
-
 class TransientSimulation : ISimulation {
 public:
     TransientSimulation(OnTickPtr onTick, int nodes);
