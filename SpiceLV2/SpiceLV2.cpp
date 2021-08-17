@@ -24,7 +24,7 @@ std::queue<double>* buffer;
 std::atomic<size_t> measured;
 
 void onTick(MNASystem & m) {
-    while (measured.load() >= bufferMaxCapacity) {};
+    while (measured.load() >= bufferMaxCapacity);
 
     monitor.lock();
     buffer->push(result.value());
