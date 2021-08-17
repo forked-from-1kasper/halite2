@@ -1,11 +1,6 @@
 #include "Components.hpp"
 #include "Halite.hpp"
 
-#include <vector>
-#include <string>
-#include <cstdio>
-#include <cmath>
-
 //
 // General overview
 // ----------------

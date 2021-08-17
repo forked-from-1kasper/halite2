@@ -1,5 +1,5 @@
 #include "Constants.hpp"
-#include "Halite.hpp"
+#include "Eigen.hpp"
 
 #include <Eigen/SparseLU>
 #include <iostream>

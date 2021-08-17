@@ -1,4 +1,4 @@
-#include "Halite.hpp"
+#include "Eigen.hpp"
 
 void MNACell::clear() {
     g = 0;

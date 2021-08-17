@@ -1,4 +1,4 @@
-#include "Halite.hpp"
+#include "Eigen.hpp"
 
 void MNASystem::setSize(int n) {
     A = new SparseMatrixXd(n - 1, n - 1);
