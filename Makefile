@@ -12,7 +12,7 @@ CPP = $(HALITE_CPP)
 
 CXX = c++
 CFLAGS  = -O3 -fPIC -I$(shell pwd) -I/usr/include/eigen3 -std=c++2a
-#CFLAGS += -DVERBOSE
+CFLAGS += -DVERBOSE
 
 PLUGIN = SpiceLV2
 BUNDLE = $(PLUGIN).lv2

@@ -17,14 +17,10 @@ struct Component : IComponent
     void setupNets(int & netSize, int & states, const int* pins) final
     {
         for (int i = 0; i < nPins; ++i)
-        {
             nets[i] = pins[i];
-        }
 
         for (int i = 0; i < nInternalNets; ++i)
-        {
             nets[nPins + i] = netSize++;
-        }
 
         setupStates(states);
     }
