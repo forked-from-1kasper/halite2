@@ -9,12 +9,10 @@ Resistor::Resistor(double r, int l0, int l1) : r(r)
 
 void Resistor::stamp(MNASystem & m)
 {
-    char txt[16];
-    txt[0] = 'R';
-    formatUnitValue(txt+1, r, "");
     double g = 1. / r;
-    m.stampStatic(+g, nets[0], nets[0], std::string("+") + txt);
-    m.stampStatic(-g, nets[0], nets[1], std::string("-") + txt);
-    m.stampStatic(-g, nets[1], nets[0], std::string("-") + txt);
-    m.stampStatic(+g, nets[1], nets[1], std::string("+") + txt);
+
+    m.stamp(nets[0], nets[0], +g, 0, nullptr);
+    m.stamp(nets[0], nets[1], -g, 0, nullptr);
+    m.stamp(nets[1], nets[0], -g, 0, nullptr);
+    m.stamp(nets[1], nets[1], +g, 0, nullptr);
 }

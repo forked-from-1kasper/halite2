@@ -11,17 +11,15 @@ void Function::stamp(MNASystem & m)
 {
     // this is identical to voltage source
     // except voltage is dynanic
-    m.stampStatic(-1, nets[0], nets[2], "-1");
-    m.stampStatic(+1, nets[1], nets[2], "+1");
+    m.stamp(nets[0], nets[2], -1, 0, nullptr);
+    m.stamp(nets[1], nets[2], +1, 0, nullptr);
 
-    m.stampStatic(+1, nets[2], nets[0], "+1");
-    m.stampStatic(-1, nets[2], nets[1], "-1");
+    m.stamp(nets[2], nets[0], +1, 0, nullptr);
+    m.stamp(nets[2], nets[1], -1, 0, nullptr);
+
+    m.stampValue(nets[2], 0, 0, &v);
 
     char buf[16];
-    m.b[nets[2]].gdyn.push_back(&v);
-    sprintf(buf, "Vfn:%d,%d", pinLoc[0], pinLoc[1]);
-    m.b[nets[2]].txt = buf;
-
     sprintf(buf, "i:Vfn:%d,%d", pinLoc[0], pinLoc[1]);
     m.nodes[nets[2]].name = buf;
     m.nodes[nets[2]].type = MNANodeInfo::tCurrent;

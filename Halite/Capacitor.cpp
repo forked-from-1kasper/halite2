@@ -40,25 +40,23 @@ void Capacitor::stamp(MNASystem & m)
 
     // trapezoidal needs another factor of two for the g
     // since c*(v1 - v0) = (i1 + i0)/(2*t), where t = 1/T
-    double g = 2*c;
+    double g = 2 * c;
 
-    m.stampTimed(+1, nets[0], nets[2], "+t");
-    m.stampTimed(-1, nets[1], nets[2], "-t");
+    m.stamp(nets[0], nets[2], 0, +1, nullptr);
+    m.stamp(nets[1], nets[2], 0, -1, nullptr);
 
-    m.stampTimed(-g, nets[0], nets[0], std::string("-t*") + buf);
-    m.stampTimed(+g, nets[0], nets[1], std::string("+t*") + buf);
-    m.stampTimed(+g, nets[1], nets[0], std::string("+t*") + buf);
-    m.stampTimed(-g, nets[1], nets[1], std::string("-t*") + buf);
+    m.stamp(nets[0], nets[0], 0, -g, nullptr);
+    m.stamp(nets[0], nets[1], 0, +g, nullptr);
+    m.stamp(nets[1], nets[0], 0, +g, nullptr);
+    m.stamp(nets[1], nets[1], 0, -g, nullptr);
 
-    m.stampStatic(+2*g, nets[2], nets[0], std::string("+2*") + buf);
-    m.stampStatic(-2*g, nets[2], nets[1], std::string("-2*") + buf);
+    m.stamp(nets[2], nets[0], +2*g, 0, nullptr);
+    m.stamp(nets[2], nets[1], -2*g, 0, nullptr);
 
-    m.stampStatic(-1, nets[2], nets[2], "-1");
+    m.stamp(nets[2], nets[2], -1, 0, nullptr);
 
     // see the comment about v:C[%d] below
-    sprintf(buf, "q:C:%d,%d", pinLoc[0], pinLoc[1]);
-    m.b[nets[2]].gdyn.push_back(&stateVar);
-    m.b[nets[2]].txt = buf;
+    m.stampValue(nets[2], 0, 0, &stateVar);
 
     // this isn't quite right as state stores 2*c*v - i/t
     // however, we'll fix this in updateFull() for display
@@ -69,14 +67,10 @@ void Capacitor::stamp(MNASystem & m)
 
 void Capacitor::update(MNASystem & m)
 {
-    stateVar = m.b[nets[2]].lu;
+    stateVar = m.getValue(nets[2]);
 
     // solve legit voltage from the pins
-    voltage = m.b[nets[0]].lu - m.b[nets[1]].lu;
-
-    // then we can store this for display here
-    // since this value won't be used at this point
-    m.b[nets[2]].lu = c*voltage;
+    voltage = m.getValue(nets[0]) - m.getValue(nets[1]);
 }
 
 void Capacitor::scaleTime(double told_per_new)
@@ -88,6 +82,6 @@ void Capacitor::scaleTime(double told_per_new)
     // note that this also works if the old rate is infinite
     // (ie. t0=0) when going from DC analysis to transient
     //
-    double qq = 2*c*voltage;
-    stateVar = qq + (stateVar - qq)*told_per_new;
+    double qq = 2 * c * voltage;
+    stateVar = qq + (stateVar - qq) * told_per_new;
 }

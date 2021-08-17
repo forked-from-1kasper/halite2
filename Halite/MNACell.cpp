@@ -1,10 +1,12 @@
 #include "Halite.hpp"
 
-void MNACell::clear()
-{
+void MNACell::clear() {
     g = 0;
     gtimed = 0;
-    txt = "";
+}
+
+void MNACell::initPos(size_t row, size_t col) {
+    m_row = row; m_col = col;
 }
 
 void MNACell::initLU(double stepScale)
@@ -14,7 +16,5 @@ void MNACell::initLU(double stepScale)
 
 void MNACell::updatePre()
 {
-    lu = prelu;
-    for (int i = 0; i < gdyn.size(); ++i)
-        lu += *(gdyn[i]);
+    m_value = prelu + (gdyn != nullptr ? *gdyn : 0);
 }

@@ -16,7 +16,7 @@ Diode::Diode(int l0, int l1, double rs, double is, double n) : rs(rs)
 
 bool Diode::newton(MNASystem & m)
 {
-    return newtonJunctionPN(pn, m.b[nets[2]].lu);
+    return newtonJunctionPN(pn, m.getValue(nets[2]));
 }
 
 void Diode::stamp(MNASystem & m)
@@ -59,23 +59,20 @@ void Diode::stamp(MNASystem & m)
     // In practice we keep the current row since it's
     // nice to have it as an output anyway.
     //
-    m.stampStatic(-1, nets[3], nets[0], "-1");
-    m.stampStatic(+1, nets[3], nets[1], "+1");
-    m.stampStatic(+1, nets[3], nets[2], "+1");
+    m.stamp(nets[3], nets[0], -1, 0, nullptr);
+    m.stamp(nets[3], nets[1], +1, 0, nullptr);
+    m.stamp(nets[3], nets[2], +1, 0, nullptr);
 
-    m.stampStatic(+1, nets[0], nets[3], "+1");
-    m.stampStatic(-1, nets[1], nets[3], "-1");
-    m.stampStatic(-1, nets[2], nets[3], "-1");
+    m.stamp(nets[0], nets[3], +1, 0, nullptr);
+    m.stamp(nets[1], nets[3], -1, 0, nullptr);
+    m.stamp(nets[2], nets[3], -1, 0, nullptr);
 
-    m.stampStatic(rs, nets[3], nets[3], "rs:pn");
+    m.stamp(nets[3], nets[3], rs, 0, nullptr);
 
-    m.A[nets[2]][nets[2]].gdyn.push_back(&pn.geq);
-    m.A[nets[2]][nets[2]].txt = "gm:D";
-    m.b[nets[2]].gdyn.push_back(&pn.ieq);
+    m.stamp(nets[2], nets[2], 0, 0, &pn.geq);
+    m.stampValue(nets[2], 0, 0, &pn.ieq);
 
     char buf[16];
-    sprintf(buf, "i0:D:%d,%d", pinLoc[0], pinLoc[1]);
-    m.b[nets[2]].txt = buf;
 
     sprintf(buf, "v:D:%d,%d", pinLoc[0], pinLoc[1]);
     m.nodes[nets[2]].name = buf;

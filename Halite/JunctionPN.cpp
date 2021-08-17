@@ -33,10 +33,8 @@ bool newtonJunctionPN(JunctionPN & pn, double v)
 
     // check critical voltage and adjust voltage if over
     if (v > pn.vcrit)
-    {
         // this formula comes from Qucs documentation
-        v = pn.veq + pn.nvt * log((std::max)(pn.is, 1+dv*pn.rnvt));
-    }
+        v = pn.veq + pn.nvt * log(std::max(pn.is, 1 + dv * pn.rnvt));
 
     linearizeJunctionPN(pn, v);
 

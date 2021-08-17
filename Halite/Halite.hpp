@@ -4,24 +4,27 @@
 #include <string>
 #include <cmath>
 
+#define EIGEN_NO_DEBUG
+#include <Eigen/Dense>
+#include <Eigen/SparseCore>
+
+typedef Eigen::Triplet<double> Triplet;
+
 // MNACell represents a single entry in the solution matrix,
 // where we store constants and time-step dependent constants
 // separately, plus collect pointers to dynamic variables.
 //
 // We track enough information here that we only need to stamp once.
-struct MNACell
+struct MNACell : Triplet
 {
     double g;       // simple values (eg. resistor conductance)
     double gtimed;  // time-scaled values (eg. capacitor conductance)
+    double* gdyn;   // pointer to dynamic variable, added in once per solve
 
-    // pointers to dynamic variables, added in once per solve
-    std::vector<double*> gdyn;
-
-    double lu, prelu;  // lu-solver values and matrix pre-LU cache
-
-    std::string txt;    // text version of MNA for pretty-printing
+    double prelu;
 
     void clear();
+    void initPos(size_t, size_t);
     void initLU(double stepScale);
     // restore matrix state and update dynamic values
     void updatePre();
@@ -45,26 +48,25 @@ struct MNANodeInfo
     std::string name;   // node name for display
 };
 
-// Stores A and b for A*x - b = 0, where x is the solution.
-//
-// A is stored as a vector of rows, for easy in-place pivots
-//
+typedef std::vector<MNACell>        MNACells;
+typedef Eigen::SparseMatrix<double> SparseMatrixXd;
+
+// Stores A and b for Ax = b, where x is the solution.
 struct MNASystem
 {
-    typedef std::vector<MNACell>    MNAVector;
-    typedef std::vector<MNAVector>  MNAMatrix;
+    ~MNASystem();
 
     // node names - for output
-    std::vector<MNANodeInfo>    nodes;
+    std::vector<MNANodeInfo> nodes;
 
-    MNAMatrix A;
-    MNAVector b;
-
-    double time;
+    double time; MNACells conn; MNACells vals;
+    SparseMatrixXd* A; Eigen::VectorXd *b, *x;
 
     void setSize(int n);
-    void stampTimed(double g, int r, int c, const std::string & txt);
-    void stampStatic(double g, int r, int c, const std::string & txt);
+    void stamp(int i, int j, double g, double gtime, double* gdyn);
+    void stampValue(int i, double g, double gtime, double* gdyn);
+
+    double getValue(int);
 };
 
 struct IExport {
@@ -145,9 +147,6 @@ protected:
     void initLU(double stepScale);
     void setStepScale(double stepScale);
     void updatePre();
-    void luFactor();
-    int luForward();
-    int luSolve();
 
     OnTickPtr onTick;
 };

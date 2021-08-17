@@ -43,8 +43,8 @@ BJT::BJT(int b, int c, int e, bool pnp) : pnp(pnp)
 
 bool BJT::newton(MNASystem & m)
 {
-    return newtonJunctionPN(pnC, m.b[nets[3]].lu)
-         & newtonJunctionPN(pnE, m.b[nets[4]].lu);
+    return newtonJunctionPN(pnC, m.getValue(nets[3]))
+         & newtonJunctionPN(pnE, m.getValue(nets[4]));
 }
 
 
@@ -77,64 +77,58 @@ void BJT::stamp(MNASystem & m)
     //
 
     // diode currents to external base
-    m.stampStatic(1-ar, nets[0], nets[5], "1-ar");
-    m.stampStatic(1-af, nets[0], nets[6], "1-af");
+    m.stamp(nets[0], nets[5], 1-ar, 0, nullptr);
+    m.stamp(nets[0], nets[6], 1-af, 0, nullptr);
 
     // diode currents to external collector and emitter
-    m.stampStatic(-1, nets[1], nets[5], "-1");
-    m.stampStatic(-1, nets[2], nets[6], "-1");
+    m.stamp(nets[1], nets[5], -1, 0, nullptr);
+    m.stamp(nets[2], nets[6], -1, 0, nullptr);
 
     // series resistances
-    m.stampStatic(rsbc, nets[5], nets[5], "rsbc");
-    m.stampStatic(rsbe, nets[6], nets[6], "rsbe");
+    m.stamp(nets[5], nets[5], rsbc, 0, nullptr);
+    m.stamp(nets[6], nets[6], rsbe, 0, nullptr);
 
     // current - junction connections
     // for the PNP case we flip the signs of these
     // to flip the diode junctions wrt. the above
     if(pnp)
     {
-        m.stampStatic(-1, nets[5], nets[3], "-1");
-        m.stampStatic(+1, nets[3], nets[5], "+1");
+        m.stamp(nets[5], nets[3], -1, 0, nullptr);
+        m.stamp(nets[3], nets[5], +1, 0, nullptr);
 
-        m.stampStatic(-1, nets[6], nets[4], "-1");
-        m.stampStatic(+1, nets[4], nets[6], "+1");
+        m.stamp(nets[6], nets[4], -1, 0, nullptr);
+        m.stamp(nets[4], nets[6], +1, 0, nullptr);
 
     }
     else
     {
-        m.stampStatic(+1, nets[5], nets[3], "+1");
-        m.stampStatic(-1, nets[3], nets[5], "-1");
+        m.stamp(nets[5], nets[3], +1, 0, nullptr);
+        m.stamp(nets[3], nets[5], -1, 0, nullptr);
 
-        m.stampStatic(+1, nets[6], nets[4], "+1");
-        m.stampStatic(-1, nets[4], nets[6], "-1");
+        m.stamp(nets[6], nets[4], +1, 0, nullptr);
+        m.stamp(nets[4], nets[6], -1, 0, nullptr);
     }
 
     // external voltages to collector current
-    m.stampStatic(-1, nets[5], nets[0], "-1");
-    m.stampStatic(+1, nets[5], nets[1], "+1");
+    m.stamp(nets[5], nets[0], -1, 0, nullptr);
+    m.stamp(nets[5], nets[1], +1, 0, nullptr);
 
     // external voltages to emitter current
-    m.stampStatic(-1, nets[6], nets[0], "-1");
-    m.stampStatic(+1, nets[6], nets[2], "+1");
+    m.stamp(nets[6], nets[0], -1, 0, nullptr);
+    m.stamp(nets[6], nets[2], +1, 0, nullptr);
 
     // source transfer currents to external pins
-    m.stampStatic(+ar, nets[2], nets[5], "+ar");
-    m.stampStatic(+af, nets[1], nets[6], "+af");
-
-    char buf[16];
+    m.stamp(nets[2], nets[5], +ar, 0, nullptr);
+    m.stamp(nets[1], nets[6], +af, 0, nullptr);
 
     // dynamic variables
-    m.A[nets[3]][nets[3]].gdyn.push_back(&pnC.geq);
-    m.A[nets[3]][nets[3]].txt = "gm:Qbc";
-    m.b[nets[3]].gdyn.push_back(&pnC.ieq);
-    sprintf(buf, "i0:Q:%d,%d,%d:cb", pinLoc[0], pinLoc[1], pinLoc[2]);
-    m.b[nets[3]].txt = buf;
+    m.stamp(nets[3], nets[3], 0, 0, &pnC.geq);
+    m.stampValue(nets[3], 0, 0, &pnC.ieq);
 
-    m.A[nets[4]][nets[4]].gdyn.push_back(&pnE.geq);
-    m.A[nets[4]][nets[4]].txt = "gm:Qbe";
-    m.b[nets[4]].gdyn.push_back(&pnE.ieq);
-    sprintf(buf, "i0:Q:%d,%d,%d:eb", pinLoc[0], pinLoc[1], pinLoc[2]);
-    m.b[nets[4]].txt = buf;
+    m.stamp(nets[4], nets[4], 0, 0, &pnE.geq);
+    m.stampValue(nets[4], 0, 0, &pnE.ieq);
+
+    char buf[16];
 
     sprintf(buf, "v:Q:%d,%d,%d:%s",
         pinLoc[0], pinLoc[1], pinLoc[2], pnp ? "cb" : "bc");
