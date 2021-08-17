@@ -120,10 +120,10 @@ typedef std::vector<IComponent*> ComponentList;
 typedef std::vector<IExport*> IExportList;
 typedef void (*OnTickPtr)(MNASystem & m);
 
-class NetList {
+class Simulation {
 public:
-    NetList(OnTickPtr onTick, int nodes);
-    ~NetList();
+    Simulation(OnTickPtr onTick, int nodes);
+    ~Simulation();
 
     void addComponent(IComponent *);
     void buildSystem();
@@ -152,4 +152,4 @@ protected:
     OnTickPtr onTick;
 };
 
-NetList* getTestCircuit(OnTickPtr);
+Simulation* getTestCircuit(OnTickPtr);

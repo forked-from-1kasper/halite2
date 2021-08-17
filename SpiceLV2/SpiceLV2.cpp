@@ -16,7 +16,7 @@ using namespace LV2;
 const size_t bufferMaxCapacity = 1024 * 64;
 const unsigned spiceDelay = 1;
 
-NetList* net;
+Simulation* net;
 ExportVoltage result(5);
 
 std::mutex monitor;

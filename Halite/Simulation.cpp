@@ -4,25 +4,25 @@
 #include <Eigen/SparseLU>
 #include <iostream>
 
-NetList::NetList(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
+Simulation::Simulation(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
 {
     tMax = std::numeric_limits<double>::infinity();
     paused = true;
 }
 
-NetList::~NetList()
+Simulation::~Simulation()
 {
     for (const auto& c: components) delete c;
 }
 
-void NetList::addComponent(IComponent * c)
+void Simulation::addComponent(IComponent * c)
 {
     // this is a bit "temporary" for now
     c->setupNets(nets, states, c->getPinLocs());
     components.push_back(c);
 }
 
-void NetList::buildSystem()
+void Simulation::buildSystem()
 {
     system.setSize(nets);
     for (int i = 0; i < components.size(); ++i)
@@ -36,7 +36,7 @@ void NetList::buildSystem()
     tStep = 0;
 }
 
-void NetList::setTimeStep(double tStepSize)
+void Simulation::setTimeStep(double tStepSize)
 {
     for (int i = 0; i < components.size(); ++i)
         components[i]->scaleTime(tStep / tStepSize);
@@ -51,21 +51,21 @@ void NetList::setTimeStep(double tStepSize)
     setStepScale(stepScale);
 }
 
-void NetList::setMaxTime(double maxTime)
+void Simulation::setMaxTime(double maxTime)
 {
     tMax = maxTime;
 }
 
-void NetList::pause() { paused = true; }
+void Simulation::pause() { paused = true; }
 
-void NetList::run()
+void Simulation::run()
 {
     paused = false;
     while (system.time <= tMax && !paused)
         simulateTick();
 }
 
-void NetList::simulateTick()
+void Simulation::simulateTick()
 {
     int iter;
 
@@ -107,7 +107,7 @@ void NetList::simulateTick()
     #endif
 }
 
-void NetList::printHeaders()
+void Simulation::printHeaders()
 {
     printf("\n  time: |  ");
     for (int i = 1; i < nets; ++i)
@@ -115,14 +115,14 @@ void NetList::printHeaders()
     printf("\n\n");
 }
 
-void NetList::update()
+void Simulation::update()
 {
     for (int i = 0; i < components.size(); ++i)
         components[i]->update(system);
 }
 
 // return true if we’re done
-bool NetList::newton()
+bool Simulation::newton()
 {
     for (const auto & c: components)
         if (!c->newton(system))
@@ -131,26 +131,26 @@ bool NetList::newton()
     return true;
 }
 
-void NetList::initLU(double stepScale)
+void Simulation::initLU(double stepScale)
 {
     for (auto & cell: system.conn) cell.initLU(stepScale);
     for (auto & cell: system.vals) cell.initLU(stepScale);
 }
 
-void NetList::setStepScale(double stepScale)
+void Simulation::setStepScale(double stepScale)
 {
     // initialize matrix for LU and save it to cache
     initLU(stepScale);
 }
 
-void NetList::updatePre()
+void Simulation::updatePre()
 {
     for (auto & cell: system.conn) cell.updatePre();
     for (auto & cell: system.vals) cell.updatePre();
 }
 
-const MNASystem & NetList::getMNA() { return system; }
+const MNASystem & Simulation::getMNA() { return system; }
 
-void NetList::addExport(IExport* er) {
+void Simulation::addExport(IExport* er) {
     exports.push_back(er);
 }
