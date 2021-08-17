@@ -146,7 +146,7 @@ void Simulation::updatePre()
     for (auto & cell: system.vals) cell.updatePre();
 }
 
-const MNASystem & Simulation::getMNA() { return system; }
+const IMNASystem & Simulation::getMNA() { return system; }
 
 void Simulation::addExport(IExport* er) {
     exports.push_back(er);

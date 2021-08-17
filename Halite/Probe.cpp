@@ -6,7 +6,7 @@ Probe::Probe(int l0, int l1)
     pinLoc[1] = l1;
 }
 
-void Probe::stamp(MNASystem & m)
+void Probe::stamp(IMNASystem & m)
 {
     // vp + vn - vd = 0
     m.stamp(nets[2], nets[0], +1, 0, nullptr);

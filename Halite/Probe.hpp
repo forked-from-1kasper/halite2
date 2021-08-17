@@ -7,7 +7,7 @@
 struct Probe : Component<2, 1>
 {
     Probe(int l0, int l1);
-    void stamp(MNASystem & m) final;
+    void stamp(IMNASystem & m) final;
 
     //void update(MNASystem & m);
     // we could do output here :)

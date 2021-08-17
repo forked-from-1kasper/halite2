@@ -6,7 +6,7 @@ Voltage::Voltage(double v, int l0, int l1) : v(v)
     pinLoc[1] = l1;
 }
 
-void Voltage::stamp(MNASystem & m)
+void Voltage::stamp(IMNASystem & m)
 {
     m.stamp(nets[0], nets[2], -1, 0, nullptr);
     m.stamp(nets[1], nets[2], +1, 0, nullptr);

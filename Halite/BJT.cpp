@@ -41,14 +41,14 @@ BJT::BJT(int b, int c, int e, bool pnp) : pnp(pnp)
     linearizeJunctionPN(pnC, 0);
 }
 
-bool BJT::newton(MNASystem & m)
+bool BJT::newton(IMNASystem & m)
 {
     return newtonJunctionPN(pnC, m.getValue(nets[3]))
          & newtonJunctionPN(pnE, m.getValue(nets[4]));
 }
 
 
-void BJT::stamp(MNASystem & m)
+void BJT::stamp(IMNASystem & m)
 {
     // The basic idea here is the same as with diodes
     // except we do it once for each junction.

@@ -14,6 +14,6 @@ struct BJT : Component<3, 4>
     bool pnp;
 
     BJT(int b, int c, int e, bool pnp = false);
-    bool newton(MNASystem & m) final;
-    void stamp(MNASystem & m) final;
+    bool newton(IMNASystem & m) final;
+    void stamp(IMNASystem & m) final;
 };

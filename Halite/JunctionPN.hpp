@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Halite.hpp"
-
 // POD-struct for PN-junction data, for diodes and BJTs
 //
 struct JunctionPN

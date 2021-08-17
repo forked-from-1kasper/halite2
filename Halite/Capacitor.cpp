@@ -10,7 +10,7 @@ Capacitor::Capacitor(double c, int l0, int l1) : c(c)
     voltage = 0;
 }
 
-void Capacitor::stamp(MNASystem & m)
+void Capacitor::stamp(IMNASystem & m)
 {
     char buf[16];
     formatUnitValue(buf, c, "F");
@@ -65,7 +65,7 @@ void Capacitor::stamp(MNASystem & m)
     m.nodes[nets[2]].scale = 1 / c;
 }
 
-void Capacitor::update(MNASystem & m)
+void Capacitor::update(IMNASystem & m)
 {
     stateVar = m.getValue(nets[2]);
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Interface.hpp"
+
 #include <vector>
 #include <string>
 #include <cmath>
@@ -30,111 +32,43 @@ struct MNACell : Triplet
     void updatePre();
 };
 
-// this is for keeping track of node information
-// for the purposes of more intelligent plotting
-struct MNANodeInfo
-{
-    enum Type
-    {
-        tVoltage,
-        tCurrent,
-
-        tCount
-    };
-
-    Type    type;   // one auto-range per unit-type
-    double  scale;  // scale factor (eg. charge to voltage)
-
-    std::string name;   // node name for display
-};
-
 typedef std::vector<MNACell>        MNACells;
 typedef Eigen::SparseMatrix<double> SparseMatrixXd;
 
 // Stores A and b for Ax = b, where x is the solution.
-struct MNASystem
-{
+struct MNASystem : public IMNASystem {
     ~MNASystem();
 
-    // node names - for output
-    std::vector<MNANodeInfo> nodes;
+    void setSize(int n) final;
+    void stamp(int i, int j, double g, double gtime, double* gdyn) final;
+    void stampValue(int i, double g, double gtime, double* gdyn) final;
 
-    double time; MNACells conn; MNACells vals;
+    double getValue(int) final;
+
+    MNACells conn; MNACells vals;
     SparseMatrixXd* A; Eigen::VectorXd *b, *x;
-
-    void setSize(int n);
-    void stamp(int i, int j, double g, double gtime, double* gdyn);
-    void stampValue(int i, double g, double gtime, double* gdyn);
-
-    double getValue(int);
-};
-
-struct IExport {
-    virtual void extract(MNASystem & m) {};
-};
-
-template <class T>
-struct Export : public IExport {
-    virtual T value() { return value(); }
-};
-
-struct IComponent
-{
-    virtual ~IComponent() {}
-
-    // return the number of pins for this component
-    virtual int pinCount() = 0;
-
-    // return a pointer to array of pin locations
-    // NOTE: these will eventually be GUI locations to be unified
-    virtual const int* getPinLocs() const = 0;
-
-    // setup pins and calculate the size of the full netlist
-    // the Component<> will handle this automatically
-    //
-    //  - netSize is the current size of the netlist
-    //  - pins is an array of circuits nodes
-    //
-    virtual void setupNets(int & netSize, int & states, const int* pins) = 0;
-
-    // stamp constants into the matrix
-    virtual void stamp(MNASystem & m) = 0;
-
-    // this is for allocating state variables
-    virtual void setupStates(int & states) {}
-
-    // update state variables, only tagged nodes
-    // this is intended for fixed-time compatible
-    // testing to make sure we can code-gen stuff
-    virtual void update(MNASystem & m) {}
-
-    // return true if we're done - will keep iterating
-    // until all the components are happy
-    virtual bool newton(MNASystem & m) { return true; }
-
-    // time-step change, for caps to fix their state-variables
-    virtual void scaleTime(double told_per_new) {}
 };
 
 typedef std::vector<IComponent*> ComponentList;
 typedef std::vector<IExport*> IExportList;
-typedef void (*OnTickPtr)(MNASystem & m);
+typedef void (*OnTickPtr)(IMNASystem & m);
 
-class Simulation {
+class Simulation : ISimulation {
 public:
     Simulation(OnTickPtr onTick, int nodes);
     ~Simulation();
 
-    void addComponent(IComponent *);
+    void addComponent(IComponent *) final;
     void buildSystem();
     void setTimeStep(double);
     void setMaxTime(double);
-    void tick(); void run(); void pause();
+    void run() final;
+    void tick(); void pause();
 
-    const MNASystem & getMNA();
+    const IMNASystem & getMNA() final;
 
     IExportList exports;
-    void addExport(IExport*);
+    void addExport(IExport*) final;
 
     void printHeaders();
 

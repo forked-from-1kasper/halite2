@@ -7,7 +7,7 @@ Resistor::Resistor(double r, int l0, int l1) : r(r)
     pinLoc[1] = l1;
 }
 
-void Resistor::stamp(MNASystem & m)
+void Resistor::stamp(IMNASystem & m)
 {
     double g = 1. / r;
 

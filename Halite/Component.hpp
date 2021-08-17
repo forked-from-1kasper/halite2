@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Halite.hpp"
+#include "Interface.hpp"
 
 template <int nPins = 0, int nInternalNets = 0>
 struct Component : IComponent

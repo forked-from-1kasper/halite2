@@ -14,12 +14,12 @@ Diode::Diode(int l0, int l1, double rs, double is, double n) : rs(rs)
     linearizeJunctionPN(pn, 0);
 }
 
-bool Diode::newton(MNASystem & m)
+bool Diode::newton(IMNASystem & m)
 {
     return newtonJunctionPN(pn, m.getValue(nets[2]));
 }
 
-void Diode::stamp(MNASystem & m)
+void Diode::stamp(IMNASystem & m)
 {
     // Diode could be built with 3 extra nodes:
     //

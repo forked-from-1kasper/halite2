@@ -9,6 +9,6 @@ struct Function : Component<2,1>
 {
     FuncPtr fn; double v;
     Function(FuncPtr fn, int l0, int l1);
-    void stamp(MNASystem & m) final;
-    void update(MNASystem & m) final;
+    void stamp(IMNASystem & m) final;
+    void update(IMNASystem & m) final;
 };

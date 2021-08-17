@@ -3,7 +3,7 @@
 
 ExportVoltage voltage(5);
 
-void onTick(MNASystem & m) {
+void onTick(IMNASystem & m) {
 }
 
 int main() {

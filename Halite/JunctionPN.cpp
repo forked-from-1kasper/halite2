@@ -1,6 +1,8 @@
 #include "Constants.hpp"
 #include "JunctionPN.hpp"
 
+#include <cmath>
+
 void initJunctionPN(JunctionPN & pn, double is, double n)
 {
     pn.is = is;

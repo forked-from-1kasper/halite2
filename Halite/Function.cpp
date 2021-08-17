@@ -7,7 +7,7 @@ Function::Function(FuncPtr fn, int l0, int l1) : fn(fn)
     v = fn(0);
 }
 
-void Function::stamp(MNASystem & m)
+void Function::stamp(IMNASystem & m)
 {
     // this is identical to voltage source
     // except voltage is dynanic
@@ -25,7 +25,7 @@ void Function::stamp(MNASystem & m)
     m.nodes[nets[2]].type = MNANodeInfo::tCurrent;
 }
 
-void Function::update(MNASystem & m)
+void Function::update(IMNASystem & m)
 {
     v = fn(m.time);
 }
