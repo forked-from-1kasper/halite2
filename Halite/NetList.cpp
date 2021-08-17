@@ -10,9 +10,7 @@ NetList::NetList(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(
 
 NetList::~NetList()
 {
-    for (const auto& c: components) {
-        delete c;
-    }
+    for (const auto& c: components) delete c;
 }
 
 void NetList::addComponent(IComponent * c)

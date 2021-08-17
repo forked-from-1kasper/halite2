@@ -2,32 +2,34 @@
 #include <Halite/ExportVoltage.hpp>
 
 #include <lv2plugin.hpp>
-#include <Eigen/Dense>
+
 #include <iostream>
+#include <atomic>
+#include <memory>
+
 #include <thread>
 #include <mutex>
 #include <queue>
 
-using namespace Eigen;
 using namespace LV2;
 
 const size_t bufferMaxCapacity = 1024 * 64;
-const unsigned spiceDelay = 5;
+const unsigned spiceDelay = 1;
 
 NetList* net;
 ExportVoltage result(5);
 
-std::mutex* monitor;
+std::mutex monitor;
 std::queue<double>* buffer;
-size_t measured = 0;
+std::atomic<size_t> measured;
 
 void onTick(MNASystem & m) {
-    for (;measured >= bufferMaxCapacity;);
+    while (measured.load() >= bufferMaxCapacity) {};
 
-    monitor->lock();
+    monitor.lock();
     buffer->push(result.value());
     measured++;
-    monitor->unlock();
+    monitor.unlock();
 }
 
 void solverThread() {
@@ -40,31 +42,30 @@ private:
 public:
     SpiceLV2(double rate) : Plugin<SpiceLV2>(4) {
         buffer = new std::queue<double>();
-        monitor = new std::mutex;
+        measured = 0;
 
         net = getTestCircuit(&onTick);
         net->addExport(&result);
 
         spiceThread = new std::thread(solverThread);
-
         std::this_thread::sleep_for (std::chrono::seconds(spiceDelay));
     }
 
     void run(uint32_t nframes) {
-        for (;measured < nframes;);
+        while (measured.load() < nframes);
 
-        monitor->lock();
+        monitor.lock();
+
         for (uint32_t i = 0; i < nframes; ++i) {
             p(2)[i] = buffer->front(); p(3)[i] = 0;
             buffer->pop(); measured--;
         }
 
-        monitor->unlock();
+        monitor.unlock();
     }
 
     ~SpiceLV2() {
         delete spiceThread;
-        delete monitor;
         delete buffer;
         delete net;
     }
