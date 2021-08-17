@@ -129,14 +129,14 @@ public:
     void buildSystem();
     void setTimeStep(double);
     void setMaxTime(double);
-    void simulateTick();
-    void run(); void pause();
-    void printHeaders();
+    void tick(); void run(); void pause();
 
     const MNASystem & getMNA();
 
     IExportList exports;
     void addExport(IExport*);
+
+    void printHeaders();
 
 protected:
     bool paused; double tMax;

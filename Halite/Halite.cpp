@@ -67,7 +67,7 @@ Simulation* getTestCircuit(OnTickPtr onTick)
     net->buildSystem();
 
     // get DC solution (optional)
-    net->simulateTick();
+    net->tick();
     net->setTimeStep(1.0 / 44100.0);
 
     return net;

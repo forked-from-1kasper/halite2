@@ -62,10 +62,10 @@ void Simulation::run()
 {
     paused = false;
     while (system.time <= tMax && !paused)
-        simulateTick();
+        tick();
 }
 
-void Simulation::simulateTick()
+void Simulation::tick()
 {
     int iter;
 

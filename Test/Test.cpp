@@ -15,7 +15,7 @@ int main() {
     #endif
 
     for (int i = 0; i < 16; ++i)
-        net->simulateTick();
+        net->tick();
 
     #ifdef VERBOSE
         net->printHeaders();
