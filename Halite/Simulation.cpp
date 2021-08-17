@@ -67,11 +67,8 @@ void Simulation::run()
 
 void Simulation::tick()
 {
-    int iter;
-
-    auto A = *system.A; auto b = *system.b;
-
     Eigen::SparseLU<SparseMatrixXd> solver;
+    int iter; auto A = *system.A; auto b = *system.b;
 
     for (iter = 0; iter < maxIter; iter++) {
         // restore matrix state and add dynamic values
