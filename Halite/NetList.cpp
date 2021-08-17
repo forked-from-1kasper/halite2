@@ -6,6 +6,8 @@
 
 NetList::NetList(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
 {
+    tMax = std::numeric_limits<double>::infinity();
+    paused = true;
 }
 
 NetList::~NetList()
@@ -47,6 +49,20 @@ void NetList::setTimeStep(double tStepSize)
     #endif
 
     setStepScale(stepScale);
+}
+
+void NetList::setMaxTime(double maxTime)
+{
+    tMax = maxTime;
+}
+
+void NetList::pause() { paused = true; }
+
+void NetList::run()
+{
+    paused = false;
+    while (system.time <= tMax && !paused)
+        simulateTick();
 }
 
 void NetList::simulateTick()

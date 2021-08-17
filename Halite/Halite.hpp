@@ -127,9 +127,10 @@ public:
 
     void addComponent(IComponent *);
     void buildSystem();
-    void dumpMatrix();
     void setTimeStep(double);
+    void setMaxTime(double);
     void simulateTick();
+    void run(); void pause();
     void printHeaders();
 
     const MNASystem & getMNA();
@@ -138,8 +139,8 @@ public:
     void addExport(IExport*);
 
 protected:
-    double tStep;
-    int nets, states;
+    bool paused; double tMax;
+    double tStep; int nets, states;
     ComponentList components;
     MNASystem system;
     void update();

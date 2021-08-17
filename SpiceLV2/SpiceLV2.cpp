@@ -33,7 +33,7 @@ void onTick(MNASystem & m) {
 }
 
 void solverThread() {
-    for (;;) net->simulateTick();
+    net->run();
 }
 
 class SpiceLV2 : public Plugin<SpiceLV2> {
@@ -65,6 +65,8 @@ public:
     }
 
     ~SpiceLV2() {
+        net->pause();
+
         delete spiceThread;
         delete buffer;
         delete net;
