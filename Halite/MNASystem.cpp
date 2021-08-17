@@ -23,7 +23,7 @@ void MNASystem::setSize(int n) {
     time = 0;
 }
 
-void stampCell(MNACells & vect, int i, int j, double g, double gtimed, double* gdyn) {
+void pushBack(MNACells & vect, int i, int j, double g, double gtimed, double* gdyn) {
     vect.push_back(MNACell());
     vect.back().initPos(i, j);
     vect.back().g = g;
@@ -33,11 +33,11 @@ void stampCell(MNACells & vect, int i, int j, double g, double gtimed, double* g
 
 void MNASystem::stamp(int i, int j, double g, double gtimed, double* gdyn) {
     if (i > 0 && j > 0)
-        stampCell(conn, i - 1, j - 1, g, gtimed, gdyn);
+        pushBack(conn, i - 1, j - 1, g, gtimed, gdyn);
 }
 
-void MNASystem::stampValue(int i, double g, double gtimed, double* gdyn) {
-    if (i > 0) stampCell(vals, i - 1, 0, g, gtimed, gdyn);
+void MNASystem::stampRhs(int i, double g, double gtimed, double* gdyn) {
+    if (i > 0) pushBack(vals, i - 1, 0, g, gtimed, gdyn);
 }
 
 double MNASystem::getValue(int idx) {

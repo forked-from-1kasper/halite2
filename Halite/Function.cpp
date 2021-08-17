@@ -17,7 +17,7 @@ void Function::stamp(IMNASystem & m)
     m.stamp(nets[2], nets[0], +1, 0, nullptr);
     m.stamp(nets[2], nets[1], -1, 0, nullptr);
 
-    m.stampValue(nets[2], 0, 0, &v);
+    m.stampRhs(nets[2], 0, 0, &v);
 
     char buf[16];
     sprintf(buf, "i:Vfn:%d,%d", pinLoc[0], pinLoc[1]);

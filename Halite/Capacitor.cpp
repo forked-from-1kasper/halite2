@@ -56,7 +56,7 @@ void Capacitor::stamp(IMNASystem & m)
     m.stamp(nets[2], nets[2], -1, 0, nullptr);
 
     // see the comment about v:C[%d] below
-    m.stampValue(nets[2], 0, 0, &stateVar);
+    m.stampRhs(nets[2], 0, 0, &stateVar);
 
     // this isn't quite right as state stores 2*c*v - i/t
     // however, we'll fix this in updateFull() for display

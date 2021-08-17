@@ -15,10 +15,10 @@ struct MNANodeInfo
         tCount
     };
 
-    Type    type;   // one auto-range per unit-type
-    double  scale;  // scale factor (eg. charge to voltage)
+    Type    type;  // one auto-range per unit-type
+    double  scale; // scale factor (eg. charge to voltage)
 
-    std::string name;   // node name for display
+    std::string name; // node name for display
 };
 
 struct IMNASystem {
@@ -26,7 +26,7 @@ struct IMNASystem {
 
     virtual void setSize(int n) {};
     virtual void stamp(int i, int j, double g, double gtime, double* gdyn) {};
-    virtual void stampValue(int i, double g, double gtime, double* gdyn) {};
+    virtual void stampRhs(int i, double g, double gtime, double* gdyn) {};
 
     virtual double getValue(int) { return 0; };
 };

@@ -70,7 +70,7 @@ void Diode::stamp(IMNASystem & m)
     m.stamp(nets[3], nets[3], rs, 0, nullptr);
 
     m.stamp(nets[2], nets[2], 0, 0, &pn.geq);
-    m.stampValue(nets[2], 0, 0, &pn.ieq);
+    m.stampRhs(nets[2], 0, 0, &pn.ieq);
 
     char buf[16];
 

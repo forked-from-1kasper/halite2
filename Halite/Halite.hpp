@@ -41,7 +41,7 @@ struct MNASystem : public IMNASystem {
 
     void setSize(int n) final;
     void stamp(int i, int j, double g, double gtime, double* gdyn) final;
-    void stampValue(int i, double g, double gtime, double* gdyn) final;
+    void stampRhs(int i, double g, double gtime, double* gdyn) final;
 
     double getValue(int) final;
 

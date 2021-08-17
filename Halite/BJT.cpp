@@ -123,10 +123,10 @@ void BJT::stamp(IMNASystem & m)
 
     // dynamic variables
     m.stamp(nets[3], nets[3], 0, 0, &pnC.geq);
-    m.stampValue(nets[3], 0, 0, &pnC.ieq);
+    m.stampRhs(nets[3], 0, 0, &pnC.ieq);
 
     m.stamp(nets[4], nets[4], 0, 0, &pnE.geq);
-    m.stampValue(nets[4], 0, 0, &pnE.ieq);
+    m.stampRhs(nets[4], 0, 0, &pnE.ieq);
 
     char buf[16];
 
