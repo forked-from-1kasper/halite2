@@ -33,8 +33,8 @@ typedef std::vector<MNACell>        MNACells;
 typedef Eigen::SparseMatrix<double> SparseMatrixXd;
 
 // Stores A and b for Ax = b, where x is the solution.
-struct MNASystem : public IMNASystem {
-    ~MNASystem();
+struct MNASystemEigen : public IMNASystem {
+    ~MNASystemEigen();
 
     void setSize(int n) final;
     void stamp(int i, int j, double g, double gtime, double* gdyn) final;
@@ -50,10 +50,10 @@ typedef std::vector<IComponent*> ComponentList;
 typedef std::vector<IExport*> IExportList;
 typedef void (*OnTickPtr)(IMNASystem & m);
 
-class Simulation : ISimulation {
+class TransientSimulation : ISimulation {
 public:
-    Simulation(OnTickPtr onTick, int nodes);
-    ~Simulation();
+    TransientSimulation(OnTickPtr onTick, int nodes);
+    ~TransientSimulation();
 
     void addComponent(IComponent *) final;
     void buildSystem();
@@ -73,7 +73,7 @@ protected:
     bool paused; double tMax;
     double tStep; int nets, states;
     ComponentList components;
-    MNASystem system;
+    MNASystemEigen system;
     void update();
     bool newton();
     void initLU(double stepScale);

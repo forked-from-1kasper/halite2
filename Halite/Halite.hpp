@@ -2,4 +2,4 @@
 
 #include "Eigen.hpp"
 
-Simulation* getTestCircuit(OnTickPtr);
+TransientSimulation* getTestCircuit(OnTickPtr);

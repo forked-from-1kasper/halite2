@@ -3,7 +3,7 @@ HALITE_HPP = Halite/Component.hpp Halite/Interface.hpp Halite/Eigen.hpp
 HALITE_CPP  = Halite/Constants Halite/ExportVoltage
 HALITE_CPP += Halite/Voltage Halite/Capacitor Halite/Resistor Halite/Probe Halite/Function
 HALITE_CPP += Halite/JunctionPN Halite/Diode Halite/BJT
-HALITE_CPP += Halite/MNACell Halite/MNASystem Halite/Simulation Halite/Halite
+HALITE_CPP += Halite/MNACell Halite/MNASystem Halite/TransientSimulation Halite/Halite
 
 LIBHALITE  = libhalite
 

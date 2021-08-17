@@ -4,25 +4,25 @@
 #include <Eigen/SparseLU>
 #include <iostream>
 
-Simulation::Simulation(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
+TransientSimulation::TransientSimulation(OnTickPtr func, int nodes) : onTick(func), nets(nodes), states(0)
 {
     tMax = std::numeric_limits<double>::infinity();
     paused = true;
 }
 
-Simulation::~Simulation()
+TransientSimulation::~TransientSimulation()
 {
     for (const auto& c: components) delete c;
 }
 
-void Simulation::addComponent(IComponent * c)
+void TransientSimulation::addComponent(IComponent * c)
 {
     // this is a bit "temporary" for now
     c->setupNets(nets, states, c->getPinLocs());
     components.push_back(c);
 }
 
-void Simulation::buildSystem()
+void TransientSimulation::buildSystem()
 {
     system.setSize(nets);
     for (int i = 0; i < components.size(); ++i)
@@ -36,7 +36,7 @@ void Simulation::buildSystem()
     tStep = 0;
 }
 
-void Simulation::setTimeStep(double tStepSize)
+void TransientSimulation::setTimeStep(double tStepSize)
 {
     for (int i = 0; i < components.size(); ++i)
         components[i]->scaleTime(tStep / tStepSize);
@@ -51,21 +51,21 @@ void Simulation::setTimeStep(double tStepSize)
     setStepScale(stepScale);
 }
 
-void Simulation::setMaxTime(double maxTime)
+void TransientSimulation::setMaxTime(double maxTime)
 {
     tMax = maxTime;
 }
 
-void Simulation::pause() { paused = true; }
+void TransientSimulation::pause() { paused = true; }
 
-void Simulation::run()
+void TransientSimulation::run()
 {
     paused = false;
     while (system.time <= tMax && !paused)
         tick();
 }
 
-void Simulation::tick()
+void TransientSimulation::tick()
 {
     Eigen::SparseLU<SparseMatrixXd> solver;
     int iter; auto A = *system.A; auto b = *system.b;
@@ -104,7 +104,7 @@ void Simulation::tick()
     #endif
 }
 
-void Simulation::printHeaders()
+void TransientSimulation::printHeaders()
 {
     printf("\n  time: |  ");
     for (int i = 1; i < nets; ++i)
@@ -112,14 +112,14 @@ void Simulation::printHeaders()
     printf("\n\n");
 }
 
-void Simulation::update()
+void TransientSimulation::update()
 {
     for (int i = 0; i < components.size(); ++i)
         components[i]->update(system);
 }
 
 // return true if we’re done
-bool Simulation::newton()
+bool TransientSimulation::newton()
 {
     for (const auto & c: components)
         if (!c->newton(system))
@@ -128,26 +128,26 @@ bool Simulation::newton()
     return true;
 }
 
-void Simulation::initLU(double stepScale)
+void TransientSimulation::initLU(double stepScale)
 {
     for (auto & cell: system.conn) cell.initLU(stepScale);
     for (auto & cell: system.vals) cell.initLU(stepScale);
 }
 
-void Simulation::setStepScale(double stepScale)
+void TransientSimulation::setStepScale(double stepScale)
 {
     // initialize matrix for LU and save it to cache
     initLU(stepScale);
 }
 
-void Simulation::updatePre()
+void TransientSimulation::updatePre()
 {
     for (auto & cell: system.conn) cell.updatePre();
     for (auto & cell: system.vals) cell.updatePre();
 }
 
-const IMNASystem & Simulation::getMNA() { return system; }
+const IMNASystem & TransientSimulation::getMNA() { return system; }
 
-void Simulation::addExport(IExport* er) {
+void TransientSimulation::addExport(IExport* er) {
     exports.push_back(er);
 }

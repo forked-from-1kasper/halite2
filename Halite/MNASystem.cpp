@@ -1,6 +1,6 @@
 #include "Eigen.hpp"
 
-void MNASystem::setSize(int n) {
+void MNASystemEigen::setSize(int n) {
     A = new SparseMatrixXd(n - 1, n - 1);
     b = new Eigen::VectorXd(n - 1);
     x = new Eigen::VectorXd(n - 1);
@@ -31,19 +31,19 @@ void pushBack(MNACells & vect, int i, int j, double g, double gtimed, double* gd
     vect.back().gdyn = gdyn;
 }
 
-void MNASystem::stamp(int i, int j, double g, double gtimed, double* gdyn) {
+void MNASystemEigen::stamp(int i, int j, double g, double gtimed, double* gdyn) {
     if (i > 0 && j > 0)
         pushBack(conn, i - 1, j - 1, g, gtimed, gdyn);
 }
 
-void MNASystem::stampRhs(int i, double g, double gtimed, double* gdyn) {
+void MNASystemEigen::stampRhs(int i, double g, double gtimed, double* gdyn) {
     if (i > 0) pushBack(vals, i - 1, 0, g, gtimed, gdyn);
 }
 
-double MNASystem::getValue(int idx) {
+double MNASystemEigen::getValue(int idx) {
     return (idx > 0) ? (*x)[idx - 1] : 0;
 }
 
-MNASystem::~MNASystem() {
+MNASystemEigen::~MNASystemEigen() {
     delete A; delete b; delete x;
 }
